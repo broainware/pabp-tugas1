@@ -1,105 +1,112 @@
-// app/ssg/page.tsx
-// Ini adalah komponen statis (SSG secara default di Next.js App Router)
+import React from 'react';
+import Link from 'next/link';
 
-export default function SSGPage() {
-  // Waktu ini akan "terkunci" pada saat kamu menjalankan 'npm run build'
-  const buildTime = new Date().toLocaleTimeString('id-ID');
-  
-  const products = [
-    { id: 1, name: "Retro Jersey MU", price: "10 ⏣", stock: 5, desc: "Jersey Retro Manchester United Vintage", image: "/products/jersey-mu.jpeg" },
-    { id: 2, name: "Sand Camo Shirt", price: "7 ⏣", stock: 12, desc: "Stone Island Camo Overshirt", image: "/products/camo-shirt.jpeg" },
-    { id: 3, name: "Blush Jacket", price: "8 ⏣", stock: 3, desc: "Stone Island Soft Shell Jacket", image: "/products/blush.png" },
-    { id: 4, name: "Frost Jacket", price: "10 ⏣", stock: 17, desc: "Stone Island Silver Reflective", image: "/products/frost.jpeg" },
-    { id: 5, name: "Fredperry Long Sleeve", price: "12 ⏣", stock: 20, desc: "Fredperry T-shirt Long Sleeve Y2K", image: "/products/fredperry.png" },
-    { id: 6, name: "Engineering Workshirt", price: "8 ⏣", stock: 4, desc: "Black Heavy Duty Workshirt", image: "/products/workshirt.png" },
-  ];
+interface Product {
+  id: number;
+  title: string;
+  price: number;
+  stock: number;
+  description: string;
+  thumbnail: string;
+}
+
+// Fungsi Ambil Data SSG
+async function getSSGData() {
+  const res = await fetch('https://dummyjson.com/products/category/mens-shirts?limit=9');
+  if (!res.ok) throw new Error('Gagal ambil data');
+  const data = await res.json();
+  return data.products as Product[];
+}
+
+export default async function SSGPage() {
+  const products = await getSSGData();
+  const buildDate = "21 FEBRUARI 2026"; // Tanggal build statis
 
   return (
-    <main className="min-h-screen bg-[#1a0a0a] text-[#f5f5f7] selection:bg-[#d4c3a3]/30">
+    <main className="min-h-screen font-sans selection:bg-[#d4c3a3] selection:text-[#3a0a0a] relative overflow-x-hidden bg-[#0a0101]">
       
-      {/* HERO SECTION */}
-      <div className="relative h-[50vh] w-full overflow-hidden border-b border-[#d4c3a3]/10">
-        <img 
-          src="/hero.png" 
-          alt="Hero Cover" 
-          className="w-full h-full object-cover opacity-60" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1a0a0a] via-transparent to-black/20"></div>
-        
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4">
-           <div className="flex justify-between w-full max-w-6xl absolute top-8 px-8">
-              <a href="/" className="text-white text-[10px] hover:text-[#d4c3a3] transition-colors tracking-widest uppercase font-bold drop-shadow-md">← Dashboard</a>
-              <div className="bg-black/40 border border-[#d4c3a3]/30 px-4 py-1.5 rounded-sm backdrop-blur-sm">
-                <span className="text-[9px] font-mono text-[#d4c3a3] tracking-tighter uppercase font-bold">
-                  ● Static Build: {buildTime}
-                </span>
-              </div>
-           </div>
-           
-           <h1 className="text-4xl md:text-6xl font-serif italic text-white uppercase tracking-[0.2em] text-center drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">
-             SSG CATALOG
-           </h1>
-           <div className="h-[2px] w-20 bg-[#d4c3a3] mt-6 shadow-lg"></div>
-           <p className="text-white text-[10px] font-bold uppercase tracking-[0.6em] mt-6 text-center drop-shadow-md">
-             Pre-rendered for Speed
-           </p>
-        </div>
+      {/* 1. BACKGROUND */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-[#4a0e0e]/20 blur-[180px] rounded-full"></div>
       </div>
 
-      {/* PRODUCT GRID SECTION */}
-      <div className="max-w-6xl mx-auto px-8 py-20 relative z-10">
-        <div className="flex items-center justify-center gap-6 mb-16">
-           <div className="h-[1px] w-12 bg-[#d4c3a3]/30"></div>
-           <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-[#d4c3a3]">
-             Heritage Collection
-           </h2>
-           <div className="h-[1px] w-12 bg-[#d4c3a3]/30"></div>
-        </div>
+      <div className="relative z-10">
+        {/* 2. NAV */}
+        <nav className="border-b border-white/5 py-6 px-8 flex justify-between items-center sticky top-0 bg-[#0a0101]/90 backdrop-blur-xl z-50">
+          <h1 className="text-2xl font-black tracking-tighter uppercase text-white">KZ CO.</h1>
+          <div className="hidden md:flex gap-8 text-[10px] uppercase tracking-[0.2em] font-bold text-white/50">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <Link href="/ssr" className="hover:text-white transition-colors">SSR</Link>
+            <span className="text-[#d4c3a3] border-b border-[#d4c3a3] pb-1 cursor-default">SSG Edition</span>
+            <Link href="/csr" className="hover:text-white transition-colors">CSR</Link>
+          </div>
+          <span className="text-[9px] font-mono text-[#d4c3a3] border border-[#d4c3a3]/30 px-4 py-2 rounded-full uppercase">
+            ● STATIC BUILD: {buildDate}
+          </span>
+        </nav>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {products.map((product) => (
-            <div key={product.id} className="group relative">
-              <div className="relative bg-[#d4c3a3] p-3 rounded-sm shadow-xl transition-all duration-500 hover:-translate-y-2">
-                <div className="aspect-[1/1] overflow-hidden relative bg-black/5">
+        {/* 3. HERO */}
+        <section className="relative w-full h-[70vh] flex items-center px-12 md:px-24 overflow-hidden border-b border-white/5">
+          <div className="z-20 max-w-2xl">
+            <h2 className="text-7xl md:text-9xl font-medium tracking-tighter text-white mb-6 leading-none">
+              PURE <br /> <span className="italic font-serif text-[#d4c3a3]">STILLNESS.</span>
+            </h2>
+            <p className="text-white/50 text-sm max-w-sm leading-relaxed font-light italic">
+              "Koleksi arsip statis. Keindahan yang dibekukan dalam waktu untuk performa tanpa batas."
+            </p>
+          </div>
+          <div className="absolute right-0 top-0 w-1/2 h-full z-10 hidden lg:block">
+             <img 
+               src="https://images.unsplash.com/photo-1550246140-5119ae4790b8?q=80&w=2000&auto=format&fit=crop" 
+               alt="SSG" 
+               className="w-full h-full object-cover grayscale brightness-50" 
+             />
+             <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0a0101]"></div>
+          </div>
+        </section>
+
+        {/* 4. PRODUCT GRID */}
+        <div className="max-w-7xl mx-auto px-8 py-24">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
+            {products.map((product) => (
+              <div key={product.id} className="group relative flex flex-col">
+                {/* Image Container */}
+                <div className="relative aspect-[4/5] overflow-hidden mb-6 bg-white/5 border border-white/5 shadow-2xl">
                   <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000"
+                    src={product.thumbnail} 
+                    alt={product.title} 
+                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:brightness-50" 
                   />
+                  
+                  {/* Deskripsi*/}
+                  <div className="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-t from-black/80 to-transparent">
+                    <p className="text-[#d4c3a3] text-[10px] leading-relaxed uppercase tracking-widest mb-4">
+                      {product.description}
+                    </p>
+                    <div className="w-full h-[1px] bg-[#d4c3a3]/30"></div>
+                  </div>
+
+                  <div className="absolute top-4 right-4 bg-[#d4c3a3] text-[#0a0101] px-2 py-1 text-[8px] font-bold uppercase tracking-tighter">
+                    Static Archive
+                  </div>
                 </div>
                 
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4 border-b border-[#1a0a0a]/10 pb-4">
-                    <h3 className="text-sm font-black uppercase tracking-wider text-[#1a0a0a]">
-                      {product.name}
-                    </h3>
-                    <span className="text-xs font-serif text-[#4a1a1a] font-bold italic">{product.price}</span>
-                  </div>
-                  
-                  <p className="text-[#1a0a0a]/70 text-[10px] mb-8 font-medium leading-relaxed line-clamp-2 italic">
-                    "{product.desc}"
-                  </p>
-                  
-                  <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <span className="text-[8px] text-[#1a0a0a]/50 uppercase font-bold tracking-widest">Inventory</span>
-                      <span className="text-[10px] font-serif text-[#4a1a1a] font-bold uppercase">
-                        {product.stock} Units
-                      </span>
-                    </div>
-                    
-                    <button className="px-6 py-2.5 bg-[#1a0a0a] text-[#d4c3a3] text-[9px] font-black uppercase tracking-widest hover:bg-[#4a1a1a] transition-all">
-                      Check Product
-                    </button>
-                  </div>
+                {/* Title & Price */}
+                <div className="flex justify-between items-baseline px-1">
+                  <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-white">
+                    {product.title}
+                  </h3>
+                  <span className="text-[14px] font-serif italic text-[#d4c3a3]">${product.price}</span>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <footer className="mt-32 text-center opacity-40 border-t border-[#d4c3a3]/10 pt-10 pb-10">
-          <p className="text-[9px] tracking-[2em] uppercase font-light text-[#d4c3a3]">KZ CO. EST 2026</p>
+        {/* 5. FOOTER */}
+        <footer className="bg-black text-white py-20 px-12 border-t border-white/5 text-center">
+            <h4 className="text-2xl font-black tracking-tighter uppercase mb-4">KZ CO.</h4>
+            <p className="text-[8px] text-white/20 tracking-[1em] uppercase">SSG EDITION // 2026</p>
         </footer>
       </div>
     </main>
