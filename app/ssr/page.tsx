@@ -44,7 +44,7 @@ export default async function SSRPage() {
           <div className="flex gap-8 items-center">
             <h1 className="text-2xl font-black tracking-tighter uppercase text-white">KZ CO.</h1>
             <div className="hidden md:flex gap-8 text-[10px] uppercase tracking-[0.2em] font-bold text-white/50">
-              <a href="/" className="hover:text-white transition-colors">Home</a>
+              <Link href="/" className="hover:text-white transition-colors">Home</Link>
               <span className="text-[#d4c3a3] border-b border-[#d4c3a3] pb-1 cursor-default">SSR Edition</span>
               <Link href="/ssg" className="hover:text-white transition-colors">SSG</Link>
               <Link href="/csr" className="hover:text-white transition-colors">CSR</Link>
