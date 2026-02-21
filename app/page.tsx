@@ -5,60 +5,72 @@ export default function HomePage() {
       style={{ backgroundImage: "url('/products/background-dashboard.jpeg')" }}
     >
       
-      {/* Overlay Gelap Latar Belakang  */}
-      <div className="absolute inset-0 bg-[#1a0a0a]/50 backdrop-blur-[1px]"></div>
+      {/* 1. LAYER OVERLAY: Vignette & Blur Depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1a0a0a]/80 via-[#1a0a0a]/40 to-[#1a0a0a]/90 backdrop-blur-[2px]"></div>
+      <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.9)]"></div>
 
-      {/* BOX UTAMA (Container) - Transparan & Glassmorphism */}
-      <div className="max-w-4xl w-full border border-[#d4c3a3]/20 backdrop-blur-md p-12 md:p-20 rounded-sm shadow-[0_30px_100px_rgba(0,0,0,0.5)] flex flex-col items-center relative z-10 bg-transparent">
+      {/* 2. BOX UTAMA (Container) */}
+      <div className="max-w-4xl w-full border border-[#d4c3a3]/10 backdrop-blur-xl p-12 md:p-24 rounded-sm shadow-[0_50px_100px_rgba(0,0,0,0.7)] flex flex-col items-center relative z-10 bg-black/40 animate-in fade-in zoom-in duration-1000">
         
-        {/* Header Section dengan Animasi Typing */}
-        <div className="flex flex-col items-center mb-12">
-          <div className="h-[1px] w-12 bg-[#d4c3a3] mb-6 opacity-50"></div>
-          
-          {/* BOX ANIMASI TYPING */}
-          <div className="overflow-hidden whitespace-nowrap border-r-4 border-[#d4c3a3] animate-typing w-fit mx-auto">
-            <h1 className="text-6xl md:text-8xl font-serif italic font-black text-[#f5f5dc] uppercase tracking-tighter drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)]">
-              KZ <span className="text-[#d4c3a3]">Co.</span>
-            </h1>
-          </div>
+        {/* Diamond Ornament */}
+        <div className="w-10 h-10 border border-[#d4c3a3]/40 rotate-45 flex items-center justify-center mb-10 group transition-transform duration-1000 hover:rotate-[225deg]">
+           <div className="w-2 h-2 bg-[#d4c3a3] animate-pulse"></div>
+        </div>
+        
+        {/* Header Section */}
+        <div className="flex flex-col items-center mb-16 text-center">
+          <span className="text-[10px] tracking-[1em] text-[#d4c3a3]/60 uppercase mb-4 font-black">
+            The Digital Atelier
+          </span>
 
-          <p className="mt-6 text-[#d4c3a3] tracking-[0.5em] text-[10px] md:text-xs uppercase font-bold drop-shadow-md text-center opacity-80">
-            Premium Roblox Apparel 
-          </p>
+          <h1 className="text-7xl md:text-9xl font-serif italic font-medium text-white uppercase tracking-tighter drop-shadow-2xl">
+            KZ <span className="text-[#d4c3a3] not-italic font-sans font-black">Co.</span>
+          </h1>
+
+          <div className="flex items-center gap-6 mt-6">
+            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#d4c3a3]/50"></div>
+            <p className="text-[#d4c3a3] tracking-[0.6em] text-[9px] md:text-[11px] uppercase font-bold opacity-80">
+              Roblox Premium Apparel 
+            </p>
+            <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#d4c3a3]/50"></div>
+          </div>
         </div>
 
-        {/* Garis Pembatas Gradasi */}
-        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#d4c3a3]/30 to-transparent mb-16"></div>
-        
-        {/* Tombol Navigasi Rendering */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        {/* 3. NAVIGATION GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
           {['ssr', 'csr', 'ssg'].map((type) => (
             <a 
               key={type}
               href={`/${type}`} 
-              className="group relative overflow-hidden px-8 py-6 border border-[#d4c3a3]/30 rounded-sm hover:border-[#d4c3a3] transition-all duration-500 text-center bg-black/20 backdrop-blur-sm"
+              className="group relative overflow-hidden px-8 py-10 border border-white/5 rounded-sm hover:border-[#d4c3a3]/50 transition-all duration-700 bg-[#1a0a0a]/40 backdrop-blur-md"
             >
-              {/* Hover Effect Fill Layer */}
-              <div className="absolute inset-0 bg-[#d4c3a3] translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500"></div>
+              {/* Animated Background on Hover */}
+              <div className="absolute inset-0 bg-[#d4c3a3] translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]"></div>
               
-              <span className="relative z-10 text-[10px] font-black tracking-[0.3em] text-[#d4c3a3] group-hover:text-[#1a0a0a] uppercase transition-colors duration-500">
-                {type} Catalog
-              </span>
+              <div className="relative z-10 flex flex-col items-center">
+                <span className="text-[9px] font-black tracking-[0.4em] text-[#d4c3a3] group-hover:text-[#1a0a0a] uppercase transition-colors duration-500 mb-2">
+                  Explore
+                </span>
+                <span className="text-[16px] font-serif italic text-white group-hover:text-[#1a0a0a] uppercase tracking-widest transition-colors duration-500">
+                  {type} Mode
+                </span>
+              </div>
             </a>
           ))}
         </div>
 
-     
-        <div className="mt-16 flex items-center gap-4 opacity-50">
-           <div className="h-[1px] w-8 bg-[#d4c3a3]"></div>
-           <span className="text-[8px] uppercase tracking-[0.4em] font-medium text-[#d4c3a3] drop-shadow-md">Experimental Projects</span>
-           <div className="h-[1px] w-8 bg-[#d4c3a3]"></div>
+        {/* 4. SUBTITLE FOOTER */}
+        <div className="mt-20 flex flex-col items-center gap-4">
+            <div className="h-10 w-[1px] bg-gradient-to-b from-[#d4c3a3] to-transparent"></div>
+            <span className="text-[8px] uppercase tracking-[0.6em] font-medium text-[#d4c3a3]/40">Experimental Interface // 2026</span>
         </div>
       </div>
       
-      {/* FOOTER */}
-      <footer className="absolute bottom-8 text-[#d4c3a3]/60 text-[9px] tracking-[0.5em] uppercase font-light text-center z-10 drop-shadow-md">
-        Built for PABP Assignment // Project by brooainware
+      {/* 5. PAGE FOOTER */}
+      <footer className="absolute bottom-8 w-full px-12 flex justify-between items-center text-[#d4c3a3]/40 text-[9px] tracking-[0.3em] uppercase font-bold z-10">
+        <span>KZ_CO_SYSTEM_v1.0</span>
+        <span className="text-center">Built for PABP Assignment // brooainware</span>
+        <span>TASIKMALAYA // ID</span>
       </footer>
     </main>
   );
