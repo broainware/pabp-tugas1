@@ -30,7 +30,7 @@ export default function HomePage() {
           <div className="flex items-center gap-6 mt-6">
             <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#d4c3a3]/50"></div>
             <p className="text-[#d4c3a3] tracking-[0.6em] text-[9px] md:text-[11px] uppercase font-bold opacity-80">
-              Roblox Premium Apparel 
+              Premium Clothing
             </p>
             <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#d4c3a3]/50"></div>
           </div>
