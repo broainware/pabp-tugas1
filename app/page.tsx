@@ -6,7 +6,7 @@ export default function HomePage() {
         KZ Co.
       </h1>
       <p className="mt-2 text-gray-500 tracking-[0.3em] text-xs uppercase font-light">
-        Premium Roblox Apparel // EST. 2026
+        Premium Roblox Apparel 
       </p>
       
       {/* Tombol Navigasi Rendering */}
@@ -23,7 +23,7 @@ export default function HomePage() {
       </div>
       
       <footer className="absolute bottom-8 text-gray-600 text-[10px] tracking-widest uppercase">
-        Built for PABP Assignment // Project by You
+        Built for PABP Assignment // Project by brooainware
       </footer>
     </main>
   );
