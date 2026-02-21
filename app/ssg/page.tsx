@@ -1,7 +1,7 @@
 'use client'; 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useCart } from '@/context/CartContext'; // Import context
+import { useCart } from '@/context/CartContext'; 
 
 interface Product {
   id: number;
@@ -13,11 +13,14 @@ interface Product {
 }
 
 export default function SSGPage() {
-  const { cartCount } = useCart(); // Ambil jumlah keranjang global
+  // 1. Integrasi Global State
+  const { cartCount, cart, removeFromCart, totalPrice } = useCart(); 
+  
   const [products, setProducts] = useState<Product[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const buildDate = "21 FEBRUARI 2026";
 
-  // fetch data sekali saat mount
+  // Fetch data sekali saat mount (Simulasi SSG Behavior di Client)
   useEffect(() => {
     const getSSGData = async () => {
       const res = await fetch('https://dummyjson.com/products/category/mens-shirts?limit=9');
@@ -57,7 +60,7 @@ export default function SSGPage() {
               PURE <br /> <span className="italic font-serif text-[#d4c3a3]">STILLNESS.</span>
             </h2>
             <p className="text-white/50 text-sm max-w-sm leading-relaxed font-light italic">
-              "Koleksi arsip statis. Keindahan yang dibekukan dalam waktu untuk performa tanpa batas."
+              "Koleksi arsip statis. Performa maksimal dengan data yang dibekukan saat waktu build."
             </p>
           </div>
           <div className="absolute right-0 top-0 w-1/2 h-full z-10 hidden lg:block">
@@ -75,7 +78,7 @@ export default function SSGPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
             {products.map((product) => (
               <div key={product.id} className="group relative flex flex-col">
-                <div className="relative aspect-[4/5] overflow-hidden mb-6 bg-white/5 border border-white/5 shadow-2xl">
+                <div className="relative aspect-[4/5] overflow-hidden mb-6 bg-white/5 border border-white/5 shadow-2xl transition-all duration-500 hover:border-[#d4c3a3]/30">
                   <img 
                     src={product.thumbnail} 
                     alt={product.title} 
@@ -105,17 +108,66 @@ export default function SSGPage() {
           </div>
         </div>
 
-        {/* 5. FLOATING CART (sinkron dengan CSR) */}
+        {/* 5. FLOATING CART TRIGGER */}
         <div className="fixed bottom-10 right-10 z-[100]">
           <div className="absolute -top-2 -right-2 bg-white text-[#1a0202] w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black z-10 shadow-xl">
             {cartCount}
           </div>
-          <button className="bg-[#d4c3a3] text-[#1a0202] p-5 rounded-full shadow-2xl border border-white/20 hover:bg-white transition-all">
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className="bg-[#d4c3a3] text-[#1a0202] p-5 rounded-full shadow-2xl border border-white/20 hover:bg-white transition-all active:scale-90"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           </button>
         </div>
 
-        {/* 6. FOOTER */}
+        {/* 6. SIDEBAR DRAWER */}
+        {isCartOpen && (
+          <div className="fixed inset-0 z-[110] flex justify-end">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsCartOpen(false)} />
+            <div className="relative w-full max-w-md bg-[#0a0101] h-full shadow-2xl border-l border-white/10 p-8 flex flex-col">
+              <div className="flex justify-between items-center mb-12">
+                <h2 className="text-2xl font-black text-white tracking-tighter italic uppercase">Archive Bag</h2>
+                <button onClick={() => setIsCartOpen(false)} className="text-[#d4c3a3] text-[10px] font-bold tracking-widest uppercase hover:text-white">
+                   [ Close ]
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto space-y-6">
+                {cart.length === 0 ? (
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 text-center pt-20">Bag is empty</p>
+                ) : (
+                  cart.map((item) => (
+                    <div key={item.uniqueId} className="flex justify-between items-center border-b border-white/5 pb-4">
+                      <div>
+                        <h4 className="text-white text-[11px] font-bold uppercase tracking-widest">{item.title}</h4>
+                        <p className="text-[#d4c3a3] font-serif italic text-sm">${item.price}</p>
+                      </div>
+                      <button 
+                        onClick={() => removeFromCart(item.uniqueId)} 
+                        className="text-red-500/50 hover:text-red-500 text-[9px] font-bold uppercase transition-colors"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="pt-8 border-t border-white/10 mt-auto">
+                <div className="flex justify-between items-baseline mb-6">
+                  <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Grand Total</span>
+                  <span className="text-3xl font-serif text-[#d4c3a3] italic">${totalPrice}</span>
+                </div>
+                <button className="w-full bg-[#d4c3a3] text-[#1a0202] py-5 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-white transition-all">
+                  Confirm Selection
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 7. FOOTER */}
         <footer className="bg-black text-white py-20 px-12 border-t border-white/5 text-center">
             <h4 className="text-2xl font-black tracking-tighter uppercase mb-4">KZ CO.</h4>
             <p className="text-[8px] text-white/20 tracking-[1em] uppercase">SSG EDITION // 2026</p>
