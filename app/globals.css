@@ -10,6 +10,17 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* --- Animasi Typing & Blink --- */
+  --animate-typing: typing 2.5s steps(10, end), blink .75s step-end infinite;
+
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+  @keyframes blink {
+    50% { border-color: transparent }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
