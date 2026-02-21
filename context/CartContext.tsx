@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface CartItem {
   id: number;
-  uniqueId: number; // Untuk membedakan barang yang sama yang dibeli berkali-kali
+  uniqueId: number; // ID unik untuk setiap baris di keranjang
   title: string;
   price: number;
 }
@@ -22,6 +22,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   const addToCart = (item: Omit<CartItem, 'uniqueId'>) => {
+    // Tambahkan uniqueId menggunakan timestamp saat diklik
     setCart((prev) => [...prev, { ...item, uniqueId: Date.now() + Math.random() }]);
   };
 
