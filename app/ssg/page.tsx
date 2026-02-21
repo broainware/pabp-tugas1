@@ -1,5 +1,7 @@
-import React from 'react';
+'use client'; 
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext'; // Import context
 
 interface Product {
   id: number;
@@ -10,17 +12,20 @@ interface Product {
   thumbnail: string;
 }
 
-// Fungsi Ambil Data SSG
-async function getSSGData() {
-  const res = await fetch('https://dummyjson.com/products/category/mens-shirts?limit=9');
-  if (!res.ok) throw new Error('Gagal ambil data');
-  const data = await res.json();
-  return data.products as Product[];
-}
+export default function SSGPage() {
+  const { cartCount } = useCart(); // Ambil jumlah keranjang global
+  const [products, setProducts] = useState<Product[]>([]);
+  const buildDate = "21 FEBRUARI 2026";
 
-export default async function SSGPage() {
-  const products = await getSSGData();
-  const buildDate = "21 FEBRUARI 2026"; // Tanggal build statis
+  // fetch data sekali saat mount
+  useEffect(() => {
+    const getSSGData = async () => {
+      const res = await fetch('https://dummyjson.com/products/category/mens-shirts?limit=9');
+      const data = await res.json();
+      setProducts(data.products);
+    };
+    getSSGData();
+  }, []);
 
   return (
     <main className="min-h-screen font-sans selection:bg-[#d4c3a3] selection:text-[#3a0a0a] relative overflow-x-hidden bg-[#0a0101]">
@@ -70,7 +75,6 @@ export default async function SSGPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
             {products.map((product) => (
               <div key={product.id} className="group relative flex flex-col">
-                {/* Image Container */}
                 <div className="relative aspect-[4/5] overflow-hidden mb-6 bg-white/5 border border-white/5 shadow-2xl">
                   <img 
                     src={product.thumbnail} 
@@ -78,7 +82,6 @@ export default async function SSGPage() {
                     className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:brightness-50" 
                   />
                   
-                  {/* Deskripsi*/}
                   <div className="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-t from-black/80 to-transparent">
                     <p className="text-[#d4c3a3] text-[10px] leading-relaxed uppercase tracking-widest mb-4">
                       {product.description}
@@ -91,7 +94,6 @@ export default async function SSGPage() {
                   </div>
                 </div>
                 
-                {/* Title & Price */}
                 <div className="flex justify-between items-baseline px-1">
                   <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-white">
                     {product.title}
@@ -103,7 +105,17 @@ export default async function SSGPage() {
           </div>
         </div>
 
-        {/* 5. FOOTER */}
+        {/* 5. FLOATING CART (sinkron dengan CSR) */}
+        <div className="fixed bottom-10 right-10 z-[100]">
+          <div className="absolute -top-2 -right-2 bg-white text-[#1a0202] w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black z-10 shadow-xl">
+            {cartCount}
+          </div>
+          <button className="bg-[#d4c3a3] text-[#1a0202] p-5 rounded-full shadow-2xl border border-white/20 hover:bg-white transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </button>
+        </div>
+
+        {/* 6. FOOTER */}
         <footer className="bg-black text-white py-20 px-12 border-t border-white/5 text-center">
             <h4 className="text-2xl font-black tracking-tighter uppercase mb-4">KZ CO.</h4>
             <p className="text-[8px] text-white/20 tracking-[1em] uppercase">SSG EDITION // 2026</p>
